@@ -1,3 +1,4 @@
+
 name: Build and Deploy Python App
 
 on:
@@ -32,6 +33,8 @@ jobs:
           pip install pytest
 
       - name: Run tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           source venv/bin/activate
           pytest
@@ -101,3 +104,4 @@ jobs:
           sudo systemctl restart python-app
 
           EOF
+
