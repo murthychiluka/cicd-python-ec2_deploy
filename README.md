@@ -12,6 +12,7 @@ python-ec2-cicd/
         └── deploy.yml
 ```
 
+
 ```text
 The flow will be:
 
@@ -61,6 +62,8 @@ sudo dnf install python3 python3-pip -y
 Check:
 
 python3 --version
+
+```text
 7. Create application directory
 
 On EC2:
@@ -68,7 +71,9 @@ On EC2:
 sudo mkdir -p /opt/python-app
 
 Give ownership to ec2-user:
+```
 
+```text
 sudo chown -R ec2-user:ec2-user /opt/python-app
 8. Create systemd service
 
@@ -111,7 +116,8 @@ Create these three repository secrets: EC2_HOST  , EC2_USER  ,EC2_SSH_KEY
 For a real production setup, I'd instead put NGINX/ALB in front of the application and avoid exposing 8080 publicly.
 
 For this learning exercise, exposing 8080 is fine.
-
+```
+```text
 11. Push the project
 
 Your final repository should look like:
@@ -128,6 +134,7 @@ python-ec2-cicd/
 └── .github/
     └── workflows/
         └── deploy.yml
+```
 
 ```text
  What happens during the pipeline?
