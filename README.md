@@ -218,3 +218,145 @@ The deployable artifact is:  python-app.tar.gz
 
 GitHub Actions temporarily stores that artifact between the two jobs, and the Deploy job downloads it and transfers it to EC2 via SSH/SCP
 ```
+
+```text
+on which cases we do use schedulled deployments?
+
+A scheduled deployment means: "Deploy the application automatically at a specific time, instead of immediately after a code change."
+
+Common real-world cases
+1. Production deployment during low-traffic hours
+
+Suppose developers merge code during the day:
+
+10 AM → Developer merges code
+         ↓
+     Build + Test
+         ↓
+     Artifact ready
+         ↓
+10 PM → Automatically deploy to Production
+
+Why? Production may have fewer users at night, so the risk/disruption is lower.
+```
+```text
+2. Weekend deployments
+
+For major releases:
+
+Monday-Friday
+    ↓
+Development + Testing
+    ↓
+Friday evening
+    ↓
+Release approved
+    ↓
+Saturday 2 AM
+    ↓
+Automatic Production deployment
+
+This gives the operations team time to monitor the deployment.
+```
+
+```text
+
+3. Regular deployments
+
+Some companies deliberately release on a fixed schedule:
+
+Every Tuesday at 10 PM
+        ↓
+Deploy latest approved version
+
+This is common when releases require coordination between development, QA, operations, and business teams.
+
+```
+```text
+4. Scheduled deployment after approval
+
+A very common enterprise workflow is:
+
+Developer
+   ↓
+Git push
+   ↓
+Build + Unit Tests
+   ↓
+QA Testing
+   ↓
+Manager/Release approval
+   ↓
+Schedule deployment
+   ↓
+Production
+
+For example:
+
+"Version 2.5.0 has been approved. Deploy it at 11 PM tonight."
+
+GitHub Actions can wait until the scheduled time.
+```
+```text
+5. Deploying only during a maintenance window
+
+Some systems have a defined maintenance window:
+
+Maintenance window:
+01:00 AM - 02:00 AM
+
+01:00 → Start deployment
+01:15 → Database migration
+01:30 → Application deployment
+01:45 → Smoke tests
+02:00 → Finish
+
+This is particularly useful for systems where downtime or service disruption needs to be controlled.
+
+Scheduled deployment vs normal CI/CD
+
+Normal CI/CD:
+
+Developer pushes code
+        ↓
+Build
+        ↓
+Test
+        ↓
+Deploy immediately
+
+Scheduled deployment:
+
+Developer pushes code
+        ↓
+Build
+        ↓
+Test
+        ↓
+Wait
+        ↓
+Scheduled time
+        ↓
+Deploy
+One important distinction
+
+A scheduled deployment is different from a scheduled build.
+
+For example:
+
+on:
+  schedule:
+    - cron: '30 16 * * *'
+
+could mean:
+
+"Start this workflow every day at this time."
+
+What the workflow does after starting is up to you—it could build, test, deploy, run maintenance, create backups, etc.
+
+For your current Python → EC2 GitHub Actions project, a realistic learning example would be:
+
+Push → Build/Test → Artifact → Approval → Scheduled production deployment to EC2.
+
+That would closely resemble an enterprise release process.
+```
